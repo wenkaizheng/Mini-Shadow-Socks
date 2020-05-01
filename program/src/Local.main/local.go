@@ -101,6 +101,10 @@ func listenConnection(proxy *Core.Proxy, tcpListener *net.TCPListener, table *En
 		}
 
 		Logging.NormalLogger.Println("accepted a connection")
+		Logging.NormalLogger.Printf(localTcpConn.LocalAddr().String())
+		Logging.NormalLogger.Printf(serverTcpConn.LocalAddr().String())
+		Logging.NormalLogger.Printf(localTcpConn.RemoteAddr().String())
+		Logging.NormalLogger.Printf(serverTcpConn.RemoteAddr().String())
 		connection := Core.NewConnectionHandler(localTcpConn, serverTcpConn, proxy.GetDevice(), table)
 		go connection.TransferData()
 	}
