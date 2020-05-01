@@ -127,7 +127,7 @@ func WriteAll(buffer []byte, socket *net.TCPConn, size int) (int, error) {
 **/
 func Transfer(table *Encryption.Table, conn1, conn2 *net.TCPConn, device, types int) {
 	for {
-		request := make([]byte, 256)
+		request := make([]byte, 2048)
 		readLen, err := conn1.Read(request)
 		// we need to use proxy to
 		if err != nil {
