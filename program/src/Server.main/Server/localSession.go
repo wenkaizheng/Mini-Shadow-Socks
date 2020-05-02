@@ -228,7 +228,7 @@ func (s *Session) shakeHand(localTcpConn *net.TCPConn) error {
 		decodedRequest1 := s.encryptionTable.Decode(firstRequest[0:1])
 		nextReadByte = int(decodedRequest1[0])+2
 		length +=nextReadByte
-        secondRequest := make([]byte, nextReadByte)
+        	secondRequest := make([]byte, nextReadByte)
 		readLength, err = Core.ReadAll(secondRequest,localTcpConn ,nextReadByte)
 		if err != nil {
 			return err
@@ -290,7 +290,7 @@ func (s *Session) shakeHand(localTcpConn *net.TCPConn) error {
 	encodeResponse = s.encryptionTable.Encode(response2)
 	//localTcpConn.Core.WriteAll(encodeResponse)
 	_,err = Core.WriteAll(encodeResponse, localTcpConn, 10)
-    connection := Core.NewConnectionHandler(localTcpConn, serverTcpConn, s.proxy.GetDevice(), s.encryptionTable)
+    	connection := Core.NewConnectionHandler(localTcpConn, serverTcpConn, s.proxy.GetDevice(), s.encryptionTable)
 	s.connections.Store(&connection, &connection)
 	go func() {
 			connection.TransferData()
