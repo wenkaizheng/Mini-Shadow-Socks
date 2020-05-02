@@ -76,9 +76,6 @@ func ReadAll(buffer []byte, socket *net.TCPConn, size int) (int, error) {
 	if err != nil {
 		return -1, err
 	}
-	if readLength == 0 {
-		return 0, nil
-	}
 	for {
 		if readLength == size {
 			break
@@ -87,12 +84,9 @@ func ReadAll(buffer []byte, socket *net.TCPConn, size int) (int, error) {
 		if err != nil {
 			return -1, err
 		}
-		if twice == 0 {
-			return 0, nil
-		}
 		readLength += twice
 	}
-	return 1, nil
+	return size, nil
 }
 /**
  This is correct usage for write in Go
@@ -116,7 +110,7 @@ func WriteAll(buffer []byte, socket *net.TCPConn, size int) (int, error) {
 		}
 		writeLength += twice
 	}
-	return 1, nil
+	return size, nil
 
 }
 /**
@@ -154,6 +148,13 @@ func Transfer(table *Encryption.Table, conn1, conn2 *net.TCPConn, device, types 
 		}
 
 		// we send this byte to sp
+		numbers,errs := WriteAll(request[0:readLen], conn2, readLen)
+		if numbers == -1 && errs != nil {
+			Logging.NormalLogger.Println("device and types", device, types, "got an error when writing request")
+			Logging.ErrorLogger.Println(err)
+			break
+		}
+		/**
 		writeLength, err := conn2.Write(request[0:readLen])
 		if err != nil {
 			Logging.NormalLogger.Println("device and types", device, types, "got an error when writing request")
@@ -162,6 +163,7 @@ func Transfer(table *Encryption.Table, conn1, conn2 *net.TCPConn, device, types 
 		}
 		for writeLength != readLen {
 			if writeLength != readLen {
+				Logging.NormalLogger.Printf("*******************\n")
 				twiceLength, err := conn2.Write(request[writeLength:readLen])
 				if err != nil {
 					Logging.NormalLogger.Println("device and types", device, types, "got an error when writing request")
@@ -171,5 +173,6 @@ func Transfer(table *Encryption.Table, conn1, conn2 *net.TCPConn, device, types 
 				writeLength += twiceLength
 			}
 		}
+		**/
 	}
 }
