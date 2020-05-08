@@ -4,7 +4,7 @@ This project is a simple version of socks5 proxy software in Golang.
 
 Our approach is to create two proxies for network transfer (Server and Local).  
 Usually, when users visit websites, their computers will performance DNS lookup for server IP, 
-and then do the TCP handshake for establishing a TCP connection, and router do ARP request or ARP cache for getting MAC address.
+and then do the TCP handshake for establishing a TCP connection.
 Finally, they will send requests(https or http).  
 
 This whole process can be done by user applications and servers, so basically we have 2 nodes.   
