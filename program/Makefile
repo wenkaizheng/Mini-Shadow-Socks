@@ -9,7 +9,9 @@ LIB= ./src/Authentication/authentication.go \
 	./src/Logging/logging.go
 
 LOCAL_LIB= ./src/Local.main/local.go \
- 		   ./src/Local.main/Local/localServerInfo.go
+ 		   ./src/Local.main/Local/localServerInfo.go\
+		   ./src/Local.main/Static/example.html\
+		   ./src/Local.main/Static/stylesheet/main.css
 
 SERVER_LIB= ./src/Server.main/server.go \
 			./src/Server.main/Server/server.go \
