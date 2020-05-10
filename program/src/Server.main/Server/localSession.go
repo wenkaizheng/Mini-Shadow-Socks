@@ -188,7 +188,7 @@ func (s *Session) shakeHand(localTcpConn *net.TCPConn) error {
 	if decodedRequest[1] != 0x1 {
 		return  errors.New("100th connect is only support method")
 	}
-	if decodedRequest[3]==0x1{
+	if decodedRequest[3]==Core.IpV4{
 		// v4
 		length += 6
 		firstRequest := make([]byte, 6)
@@ -216,7 +216,7 @@ func (s *Session) shakeHand(localTcpConn *net.TCPConn) error {
 		serverTcpConn = serverTcpConns
 
 	
-	}else if decodedRequest[3]==0x3{
+	}else if decodedRequest[3]==Core.DomainName{
 		// domain name
 		firstRequest := make([]byte, 1)
 		// read domain's length
@@ -254,7 +254,7 @@ func (s *Session) shakeHand(localTcpConn *net.TCPConn) error {
 		}
 		serverTcpConn = serverTcpConns
 
-	}else if decodedRequest[3]==0x4{
+	}else if decodedRequest[3]==Core.IpV6{
 			// v6
 			
 			length += 18
