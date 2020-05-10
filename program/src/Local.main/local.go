@@ -14,6 +14,8 @@ import (
 	"Logging"
 	"net"
 	"time"
+	"os/exec"
+	"runtime"
 )
 
 /**
@@ -134,6 +136,23 @@ func sendHeartBeat(serverTcpConn *net.TCPConn) {
   Also keep heartbeat mechanism to detect life cycle
 **/
 func main() {
+	// and front-end html
+	var args []string
+	var path string = "./Static/example.html"
+	switch runtime.GOOS{
+	case "darwin":
+          args = []string{"open",path}
+	
+	case "windows":
+		  args = []string{"cmd","/c","start",path}
+	default:
+		args = []string{"xdg-open",path}
+	}
+	cmd := exec.Command(args[0],args[1:]...)
+	err := cmd.Run()
+	if err!=nil {
+		Logging.ErrorLogger.Fatal("Can not open html page")
+	}
 	// should be get in configuration
 	var serverInfo Local.ServerInfo
 	readJson(&serverInfo)
