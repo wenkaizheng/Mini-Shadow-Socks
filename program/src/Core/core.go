@@ -30,6 +30,13 @@ const (
 **/
 const HeartBeatRate = 5
 const HeartBeatTimeout = 1
+
+/**
+  Add each type for socks5 ATYPE field
+**/
+const IpV4 = 0x1
+const DomainName = 0x3
+const IpV6 = 0x4
 /**
    FAIL AND SUCCESS are used for password and username verification
    BEAT is used for content from heartbeat message 
