@@ -163,10 +163,17 @@ func main() {
 	if err != nil {
 		Logging.ErrorLogger.Fatal("encounter a error when starting local proxy")
 	}
-
-	serverTcpConn, err := net.DialTCP("tcp", nil, proxy.GetServerHost())
+    d := net.Dialer{Timeout: time.Duration(serverInfo.GetTimeOut()) * time.Second}
+	Conn, err := d.Dial("tcp",serverInfo.GetServerAddr())
+	if errs, ok := err.(net.Error); ok && errs.Timeout() {
+		Logging.ErrorLogger.Fatal("Timeout occurs when connect to server")
+	}
 	if err != nil {
 		Logging.ErrorLogger.Fatal("terminating: server is not running")
+	}
+	serverTcpConn, ok := Conn.(*net.TCPConn)
+    if !ok{
+		Logging.ErrorLogger.Fatal("176 Stop")
 	}
 
 	signIn(serverInfo, serverTcpConn)
