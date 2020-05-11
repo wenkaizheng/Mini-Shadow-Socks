@@ -39,3 +39,9 @@ func (s ServerInfo) GetUserName() string {
 func (s ServerInfo) GetPassword() string {
 	return s.Password
 }
+/**
+	 Simple getter for timeout
+**/
+func (s ServerInfo)GetTimeOut()int{
+	return s.Timeout
+}
