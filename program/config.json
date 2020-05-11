@@ -1,8 +1,8 @@
 {
-    "server":"127.0.0.1",
+    "server":"66.42.94.68",
     "server_port":6204,
     "local_port":5209,
-    "password":"password",
-    "timeout":600,
-    "username" : "username"
+    "password":"vzrVozQaUI",
+    "timeout":128,
+    "username" : "372user1"
 }
