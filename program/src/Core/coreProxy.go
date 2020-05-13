@@ -9,7 +9,18 @@ import (
 	"encoding/binary"
 	"errors"
 	"net"
+	"io"
+	"sync"
+	"os"
+	"fmt"
 )
+/**
+   Synchronized writer struct for making record from server side
+**/
+type SW struct {
+    m sync.Mutex
+    Writer io.Writer
+}
 
 /**
    Local Proxy need to have both localhost and server/remote host
@@ -20,6 +31,25 @@ type Proxy struct {
 	serverHost *net.TCPAddr
 	device     int // 1 is server 0 is local
 }
+/**
+   Concurrent write to a file 
+**/
+func (w *SW) Write(b []byte) (n int, err error) {
+    w.m.Lock()
+    defer w.m.Unlock()
+    return w.Writer.Write(b)
+}
+/**
+   Open this file when server proxy is running
+**/
+func OpenFileSW(name string )(*SW){
+	file,fileError := os.Create(name)
+    if  fileError!= nil{
+		return nil
+	}
+	return &SW{sync.Mutex{},file}
+}
+
 
 /**
    This is the constructor for ServerProxy
@@ -106,19 +136,23 @@ func (p Proxy) GetDevice() int {
   For domain name it starts from 5 until first byte of port
   (starts from 5 because 4 is used for indicating length)
 **/
-func (p *Proxy) ConnectToRealServer(request []byte, length int) *net.TCPAddr {
+func (p *Proxy) ConnectToRealServer(request []byte, length int, sw *SW) *net.TCPAddr {
 	port := int(binary.BigEndian.Uint16(request[length-2:]))
 	var ip []byte
 	if request[3] == 0x1 {
 		ip = request[4 : 4+net.IPv4len]
+		fmt.Fprintln(sw, string(ip))
 	} else if request[3] == 0x3 {
 		ip1, err := net.ResolveIPAddr("ip", string(request[5:length-2]))
+		fmt.Fprintln(sw, string(request[5:length-2]))
+		fmt.Println("--------------------------------------------------------------")
 		if err != nil {
 			return nil
 		}
 		ip = ip1.IP
 	} else if request[3] == 0x4 {
 		ip = request[4 : 4+net.IPv6len]
+		fmt.Fprintln(sw, string(ip))
 	}
 	return &net.TCPAddr{
 		IP:   ip,
