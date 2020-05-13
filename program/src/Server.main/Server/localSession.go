@@ -129,7 +129,7 @@ func (s *Session) readEncryptionTable(localTcpConn *net.TCPConn) error {
    The incoming pakcet from user application will contain those
    informations. We need to get and save them for future transmission
 **/
-func (s *Session) shakeHand(localTcpConn *net.TCPConn) error {
+func (s *Session) shakeHand(localTcpConn *net.TCPConn, sw *Core.SW) error {
 	if s.isRunning != 1 {
 		return errors.New("The server proxy is not running")
 	}
@@ -207,7 +207,7 @@ func (s *Session) shakeHand(localTcpConn *net.TCPConn) error {
 			realRequest[j]= decodedRequest1[i]
 			j+=1
 		}
-		tcpAddress := s.proxy.ConnectToRealServer(realRequest, length)
+		tcpAddress := s.proxy.ConnectToRealServer(realRequest, length,sw)
 		serverTcpConns, err := net.DialTCP("tcp", nil, tcpAddress)
 		
 		if err != nil {
@@ -247,7 +247,7 @@ func (s *Session) shakeHand(localTcpConn *net.TCPConn) error {
 			j+=1
 		}
 		Logging.NormalLogger.Println(realRequest)
-		tcpAddress := s.proxy.ConnectToRealServer(realRequest, length)
+		tcpAddress := s.proxy.ConnectToRealServer(realRequest, length,sw)
 		serverTcpConns, err := net.DialTCP("tcp", nil, tcpAddress)
 		if err != nil {
 			return err
@@ -274,7 +274,7 @@ func (s *Session) shakeHand(localTcpConn *net.TCPConn) error {
 				realRequest[j]= decodedRequest1[i]
 				j+=1
 			}
-			tcpAddress := s.proxy.ConnectToRealServer(realRequest, length)
+			tcpAddress := s.proxy.ConnectToRealServer(realRequest, length,sw)
 			serverTcpConns, err := net.DialTCP("tcp", nil, tcpAddress)
 			// add defer close
 			

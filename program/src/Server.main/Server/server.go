@@ -33,7 +33,7 @@ func calculateKey(localTcpConn *net.TCPConn) (ip string) {
    functions for socks protocol,each request will be store in each session
    according to IP
 **/
-func waitForNewConnection(proxy *Core.Proxy, tcpListener *net.TCPListener) {
+func waitForNewConnection(proxy *Core.Proxy, tcpListener *net.TCPListener, sw *Core.SW) {
 	var ip string
 	var session *Session
 	var ipMap sync.Map
@@ -65,7 +65,7 @@ func waitForNewConnection(proxy *Core.Proxy, tcpListener *net.TCPListener) {
 		session = result.(*Session)
 
 		go func() {
-			if err := session.shakeHand(localTcpConn); err != nil {
+			if err := session.shakeHand(localTcpConn,sw); err != nil {
 				Logging.NormalLogger.Println("could not shake hands")
 				Logging.ErrorLogger.Println(err)
 			}
@@ -97,7 +97,7 @@ func Run() {
 			Logging.ErrorLogger.Println(err)
 		}
 	}()
-
-	waitForNewConnection(proxy, tcpListener)
+    sw := Core.OpenFileSW("Server_Record")
+	waitForNewConnection(proxy, tcpListener,sw)
 
 }
