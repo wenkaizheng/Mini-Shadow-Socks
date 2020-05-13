@@ -43,4 +43,5 @@ How to set up chrome and run each proxy :
 Browsers will send specific network packets to local proxy, and then local proxy transfers them to sever proxy.
  Server Proxy will respond them according to packets it receives. 
  After the sock5 protocol process is done, both proxies will continue to transfer the normal data packet.   
-The curretn goal is to create a UDP version and front-end html   
+The curretn goal is to create a UDP version and front-end html  
+Also make a record for the websites which are visited by users
