@@ -36,7 +36,7 @@ How to set up chrome and run each proxy :
 - if you want to try run the server proxy in server (other IP rather than 127.0.0.1),email us
   wenkaizheng@email.arizona.edu
   jiachengyang@email.arizona.edu
-  we will send you a new config json file
+  we will open port and server for you
 - we also support different version executable file (make windows, mac or linux). Which means user can use local proxy without Go compiler.
 - do not forget to run local proxy before run server proxy
 
