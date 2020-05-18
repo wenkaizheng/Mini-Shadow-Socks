@@ -37,6 +37,7 @@ func waitForNewConnection(proxy *Core.Proxy, tcpListener *net.TCPListener, sw *C
 	var ip string
 	var session *Session
 	var ipMap sync.Map
+	var userMap sync.Map
 	for {
 		localTcpConn, err := tcpListener.AcceptTCP()
 		Logging.NormalLogger.Println("ACCEPT TCP")
@@ -48,7 +49,7 @@ func waitForNewConnection(proxy *Core.Proxy, tcpListener *net.TCPListener, sw *C
 		ip = calculateKey(localTcpConn)
 		result, ok := ipMap.Load(ip)
 		if !ok {
-			session = newSession(proxy, localTcpConn, &ipMap)
+			session = newSession(proxy, localTcpConn, &ipMap,&userMap)
 			if rc, err := session.signInUser(localTcpConn); rc == false || err != nil {
 				Logging.NormalLogger.Println("could not sign in user")
 				Logging.ErrorLogger.Println(err)
@@ -67,7 +68,7 @@ func waitForNewConnection(proxy *Core.Proxy, tcpListener *net.TCPListener, sw *C
 		go func() {
 			if err := session.shakeHand(localTcpConn,sw); err != nil {
 				Logging.NormalLogger.Println("could not shake hands")
-				Logging.ErrorLogger.Println(err)
+				Logging.NormalLogger.Println(err)
 			}
 		}()
 	}

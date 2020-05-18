@@ -36,12 +36,13 @@ type Session struct {
 	connections     sync.Map
 	encryptionTable *Encryption.Table
 	ipMap           *sync.Map
+	userMap         *sync.Map
 }
 
 /**
    Simple constructor for Session
 **/
-func newSession(proxy *Core.Proxy, localTcpConn *net.TCPConn, ipMap *sync.Map) *Session {
+func newSession(proxy *Core.Proxy, localTcpConn *net.TCPConn, ipMap *sync.Map, userMap * sync.Map) *Session {
 	var connMap sync.Map
 	return &Session{
 		username:        "",
@@ -52,6 +53,8 @@ func newSession(proxy *Core.Proxy, localTcpConn *net.TCPConn, ipMap *sync.Map) *
 		connections:     connMap,
 		encryptionTable: Encryption.NewEmptyEncryptionTable(),
 		ipMap:           ipMap,
+		userMap:         userMap,
+
 	}
 }
 
@@ -73,6 +76,16 @@ func (s *Session) signInUser(localTcpConn *net.TCPConn) (bool, error) {
 		return false, errors.New("Username transfer is not successful")  
 	}
 	s.username = Core.ConvertByteTOString(name)
+	_, OK := s.userMap.Load(s.username)
+    if !OK {
+		s.userMap.Store(s.username,s)
+	}else{
+        check1, check2 = Core.WriteAll(Core.FAIL, localTcpConn, 3) 
+		if check1 == -1 && check2 != nil {
+			return false, errors.New("Write encouters problem when reply response")  
+		}
+		return false, errors.New("Can't sign in same user name and password in the same time")
+	}
 	check1, check2 = Core.ReadAll(key, localTcpConn, 128)
 	if (check1 == -1 && check2 != nil) || (check1 == 0 && check2 == nil) {
 		return false, errors.New("Password transfer is not successful")  
@@ -340,6 +353,7 @@ func (s *Session) closeSession() {
 	atomic.StoreInt32(&(s.isRunning), 0)
 	s.connections.Range(closeConnection)
 	s.ipMap.Delete(s.keyInMap)
+	s.userMap.Delete(s.username)
 	Logging.NormalLogger.Println("Session closed")
 }
 
