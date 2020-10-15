@@ -1,4 +1,4 @@
-# self-learning
+# Mini shadowsocks
 
 This project is a simple version of socks5 proxy software in Golang.  
 
