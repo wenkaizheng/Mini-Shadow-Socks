@@ -35,6 +35,7 @@ How to set up chrome and run each proxy :
 - run local proxy ./mySSLocal
 - if you want to try run the server proxy in server (other IP rather than 127.0.0.1),email us
   wenkai.zheng@emory.edu
+  jy64@illinois.edu
   we will open port and server for you
 - we also support different version executable file (make windows, mac or linux). Which means user can use local proxy without Go compiler.
 - do not forget to run local proxy before run server proxy
